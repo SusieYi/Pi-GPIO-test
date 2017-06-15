@@ -26,17 +26,23 @@ int main(int argc, const char * argv[])
 
 
 #if 1
-
-    // recv magic key
-    //  send(ack)
+    int cmd;
+    cl->recv_all(&cmd,4);
+    printf("%x\n",cmd);
+    int ack = 0x11111111;
+    cl->send_all(&ack,4);
 
     while(1)
     {
-       * cmd = read
+        cl->recv_all(&cmd,4);
+        printf("%x\n",cmd);
+        cl->send_all(&ack,4);
 
-       do-command by recived command
-
-        *send(ack)
+       // * cmd = 
+       //
+       // do-command by recived command
+       //
+       //  *send(ack)
 
 
     }
