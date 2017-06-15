@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "hysocket.h"
+#include "command.h"
 void* rec(void* s)
 {
     HySocketBase * b = (HySocketBase*)s;
@@ -22,10 +23,32 @@ int main(int argc, const char * argv[])
     // pthread_t p;
     // pthread_create(&p, NULL, rec, cl);
 
+
+
+#if 1
+
+    // recv magic key
+    //  send(ack)
+
+    while(1)
+    {
+       * cmd = read
+
+       do-command by recived command
+
+        *send(ack)
+
+
+    }
+
+
+
+    return 0;
+#endif
+
 //    while (1)
 //    {
         char buf[128] = {0};
-        printf("Me:");
        // scanf("%[^\n]s", buf);
        // getchar();
         int len = 0;
