@@ -15,6 +15,42 @@ void* rec(void* s)
 
 }
 
+
+int cmd_parser(int cmd , int type)
+{
+
+    char buf[4] = {0};
+    char * p = buf;
+    *(int*)p = cmd;
+
+    printf("cmd%x\n",cmd);
+    printf("%x %x %x %x\n",p[0],p[1],p[2],p[3]);
+    switch (type)
+    {
+        case 1:
+            return p[3] >> 4;
+            break;
+        case 2:
+            return p[3] & 0x0f;
+            break;
+        case 3:
+            {
+            int gpio;
+            return p[0];
+            //printf("debug gpio%d\n",gpio);
+            return gpio;
+            }
+            break;
+        default:
+            return 0;
+            break;
+    }
+
+}
+
+
+
+
 int main(int argc, const char * argv[])
 {
     HySocketServer * s = new HySocketServer;
@@ -29,13 +65,28 @@ int main(int argc, const char * argv[])
     int cmd;
     cl->recv_all(&cmd,4);
     printf("%x\n",cmd);
+    
+
     int ack = 0x11111111;
     cl->send_all(&ack,4);
 
     while(1)
     {
         cl->recv_all(&cmd,4);
-        printf("%x\n",cmd);
+        //    printf("%x\n",cmd);
+        int interface_class = cmd_parser(cmd,1);
+        printf("class%x\n",interface_class);
+        if(interface_class == 3)
+        {
+            int interface_setup = cmd_parser(cmd ,2);
+            int gpio = cmd_parser(cmd,3);
+            printf("GPIO MODE\n");
+            printf("GPIO:%x setup:%x\n",gpio,interface_setup);
+        }
+    else
+    {
+        printf("cmd error!\n");
+    }
         cl->send_all(&ack,4);
 
        // * cmd = 
