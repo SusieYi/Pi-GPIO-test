@@ -26,38 +26,14 @@ void recvAck(HySocketClient * cl)
     int buf = 0;
     cl->send(&buf, 4);
 
-    printf("ACK = %x\n", buf);
+    //printf("ACK = %x\n", buf);
 }
 
 const int commands[] = 
 {
-    0xffffffff,
-    0x31000000,
-    0x32000000,
-    0x30000002,
-    0x30000003,
-    0x30000004,
-    0x30000005,
-    0x30000006,
-    0x30000007,
-    0x30000008,
-    0x30000009,
-    0x3000000a,
-    0x3000000b,
-    0x3000000c,
-    0x3000000d,
-    0x3000000f,
-    0x30000011,
-    0x30000012,
-    0x30000013,
-    0x30000014,
-    0x30000015,
-    0x30000016,
-    0x30000017,
-    0x30000018,
-    0x30000019,
-    0x3000001a,
-    0x3000001b
+    0x02000001,
+    0x80000004,
+    0x00000000
 };
 
 int main(int argc, const char * argv[])
@@ -72,8 +48,8 @@ int main(int argc, const char * argv[])
     // pthread_create(&p, NULL, rec, cl);
 
 #if 1
-    sendCommand(cl, MAGIC_KEY);
-    recvAck(cl);
+   // sendCommand(cl, MAGIC_KEY);
+   // recvAck(cl);
 
     while (1)
     {
@@ -83,9 +59,26 @@ int main(int argc, const char * argv[])
         printf("your input %x\n", commands[cmd]);
 
         int real_cmd = commands[cmd];
-
+        int ack = 0;
         cl->send_all(&real_cmd, 4);
-        recvAck(cl);
+        cl->recv_all(&ack,4);
+
+        printf("ack %x\n",ack);
+
+        char buf[4] = {0};
+        char *p = buf;
+        *(int*)p = ack;
+        int val = 0;
+
+        for(int i=0 ; i<4 ; i++)
+        {
+            val+=p[i];
+        }
+        if(val!= 1)
+        {
+        printf("no ack!\n");
+        break;
+        }
 
     }
 #endif
